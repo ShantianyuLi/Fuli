@@ -1,5 +1,5 @@
 <template>
- <wrapper v-bind:current-state="currentState" />
+ <Wrapper/>
 </template>
 
 <script>
@@ -9,23 +9,12 @@ export default {
   name: "App",
   components: {
     Wrapper
-  },
-  methods: {
-    joinRoom: function () {
-      alert('in room')
-      this.state = "inputName"
-    }
-  },
-  date: function () {
-    return {
-      currentState:"init"
-    }
   }
 };
 </script>
 
 <style>
-#app {
+#wrapper {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
