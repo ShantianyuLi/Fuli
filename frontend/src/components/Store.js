@@ -14,10 +14,5 @@ export default new Vuex.Store({
     question: "",
     answer: "",
     submitted: false
-  },
-  mutations: {
-    increment () {
-      // state.count++
-    }
   }
 })

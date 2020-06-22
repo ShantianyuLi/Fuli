@@ -38,7 +38,12 @@ io.on("connection", function (socket) {
     const { roomId, userName } = data;
     try {
       appData[roomId].users.push(userName);
-      socket.emit("after-add-room", { isSuccess: true, users: appData[roomId].users });
+      socket.emit("after-add-room", {
+        isSuccess: true,
+        users: appData[roomId].users,
+        userName: userName,
+        roomId: roomId
+      });
       console.log(appData[roomId].users)
     } catch (error) {
       socket.emit("after-add-room", { isSuccess: false });

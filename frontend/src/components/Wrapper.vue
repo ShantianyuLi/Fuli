@@ -1,5 +1,5 @@
 <template>
-  <div id = "wrapper">
+  <div id="wrapper">
     <img alt="Vue logo" src="../assets/logo.png" />
     <div class="hello">
       <h1>欢迎来到fuli</h1>
@@ -56,27 +56,14 @@ const socket = io("http://localhost:3000/");
 
 const Wrapper = {
   store: Store,
-  data: function() {
-    return {
-      currentState: this.$store.state.currentState,
-      roomId: this.$store.state.roomId,
-      userName: this.$store.state.userName,
-      waiting: this.$store.state.waiting,
-      isCreator: this.$store.state.isCreator,
-      question: this.$store.state.question,
-      answer: this.$store.state.answer,
-      submitted: this.$store.state.submitted
-    }
-   },
   methods: {
     createRoom: function() {
       this.currentState = "inputName";
-      this.roomId = Math.round(Math.random() * 100000);
+      this.$store.state.roomId = Math.round(Math.random() * 100000);
       this.isCreator = true;
       socket.emit("create-room", { roomId: this.roomId });
     },
     readyGame: function() {
-      this.waiting = true;
       socket.emit("add-room", { roomId: this.roomId, userName: this.userName });
     },
     startGame: function() {
@@ -92,23 +79,96 @@ const Wrapper = {
     }
   },
   computed: {
-    users () {
-      return this.$store.state.users
-    }
+    users() {
+      return this.$store.state.users;
+    },
+    roomId: {
+      get() {
+        return this.$store.state.roomId;
+      },
+      set(value) {
+        this.$store.state.roomId = value;
+      }
+    },
+    userName: {
+      get() {
+        return this.$store.state.userName;
+      },
+      set(value) {
+        this.$store.state.userName = value;
+      }
+    },
+    waiting: {
+      get() {
+        return this.$store.state.waiting;
+      },
+      set(value) {
+        this.$store.state.waiting = value;
+      }
+    },
+    answer: {
+      get() {
+        return this.$store.state.answer;
+      },
+      set(value) {
+        this.$store.state.answer = value;
+      }
+    },
+    question: {
+      get() {
+        return this.$store.state.question;
+      },
+      set(value) {
+        this.$store.state.question = value;
+      }
+    },
+    submitted: {
+      get() {
+        return this.$store.state.submitted;
+      },
+      set(value) {
+        this.$store.state.submitted = value;
+      }
+    },
+    isCreator: {
+      get() {
+        return this.$store.state.isCreator;
+      },
+      set(value) {
+        this.$store.state.isCreator = value;
+      }
+    },
+    currentState: {
+      get() {
+        return this.$store.state.currentState;
+      },
+      set(value) {
+        this.$store.state.currentState = value;
+      }
+    },
   }
 };
+
+(function(){
 
 socket.on("read-data", function(data) {
   Wrapper.nextState = data.nextState;
 });
 
 socket.on("after-add-room", function(data) {
-  const { isSuccess, users } = data;
+  alert("added");
+  console.log("added");
+  const { isSuccess, users, roomId, userName } = data;
   if (isSuccess) {
-    console.log(Wrapper)
-    Wrapper.store.users = users;
+    if (Wrapper.store.state.roomId === roomId) {
+      Wrapper.store.state.users = users;
+      alert("added");
+      if (Wrapper.store.state.userName === userName) {
+        Wrapper.store.state.waiting = true;
+      }
+    }
   } else {
-    alert("roomId is invailed: " + Wrapper.roomId);
+    alert("roomId is invailed: ");
   }
 });
 
@@ -118,7 +178,7 @@ socket.on("after-start-game", function(data) {
   Wrapper.question = question;
   Wrapper.submitted = false;
   Wrapper.currentState = state;
-});
+});})();
 
 export default Wrapper;
 </script>
